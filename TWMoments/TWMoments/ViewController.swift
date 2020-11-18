@@ -15,15 +15,31 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     var userInfo = TWMUserInfoModel();
     var tweetList = Array<TWMTweetDetailModel>();
-    
+    var tableHeader = TWMTableViewHeader.init(frame: CGRect.init(x: 0, y: 0, width: 0, height: 260));
+    var tableCell = TWMTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: "cell");
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self;
         tableView.dataSource = self;
+        tableView.tableHeaderView = tableHeader;
+        tableView.tableFooterView = UIView();
+        tableView.register(TWMTableViewCell.self, forCellReuseIdentifier: "cell");
+        tableView.estimatedRowHeight = 50;
         self.requetData();
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadTableIndexPath), name: NSNotification.Name(rawValue: "reloadTableIndexPath"), object: nil);
         // Do any additional setup after loading the view.
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self);
+    }
+    
+    @objc func reloadTableIndexPath(notification: Notification) {
+        let indexPath = notification.object as! IndexPath;
+        self.tableView.reloadRows(at: [indexPath], with: UITableView.RowAnimation.fade);
     }
     
     func requetData() {
@@ -31,6 +47,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.requestWithUrlString(url: "https://thoughtworks-mobile-2018.herokuapp.com/user/jsmith") { (data) in
             let dataDict = data as? Dictionary<String, Any> ?? Dictionary();
             self.userInfo = TWMUserInfoModel.init(infoDict: dataDict);
+            OperationQueue.main.addOperation {
+                self.tableHeader.setUIWithModel(model: self.userInfo);
+            }
+            
         };
         //请求消息列表
         self.requestWithUrlString(url: "https://thoughtworks-mobile-2018.herokuapp.com/user/jsmith/tweets") { (data) in
@@ -38,8 +58,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             let dataArr = data as? Array<Dictionary<String, Any>> ?? [];
             for tweetDetailDict in dataArr {
                 let tweetDetailModel = TWMTweetDetailModel.init(tweetDetail: tweetDetailDict);
-                if (tweetDetailModel.content.count > 0) {
+                if (tweetDetailModel.content.count > 0 || tweetDetailModel.images.count > 0) {
                     self.tweetList.append(tweetDetailModel);
+                    OperationQueue.main.addOperation {
+                        self.tableView.reloadData();
+                    }
                 }
             }
         }
@@ -71,11 +94,19 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     //Mark: tableview delegate and datasource
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0;
+        return tweetList.count;
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell.init();
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! TWMTableViewCell;
+        cell.setUIWithModel(model: self.tweetList[indexPath.row]);
+        cell.photosView.indexPath = indexPath;
+        return cell;
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        self.tableCell.setDataWithModel(model: tweetList[indexPath.row]);
+        return self.tableCell.heightForCell();
     }
 }
 

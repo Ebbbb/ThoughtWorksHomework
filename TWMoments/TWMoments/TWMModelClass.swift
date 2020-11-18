@@ -8,7 +8,7 @@
 
 import UIKit
 
-public class TWMUserInfoModel: NSObject {
+class TWMUserInfoModel: NSObject {
     var profileImage = String();
     var avatar = String();
     var nick = String();
@@ -30,9 +30,9 @@ public class TWMUserInfoModel: NSObject {
     }
 }
 
-public class TWMTweetDetailModel: NSObject {
+class TWMTweetDetailModel: NSObject {
     var content = String();
-    var images = Array<Any>();
+    var images = Array<String>();
     var sender = TWMUserInfoModel();
     var comments = Array<TWMTweetDetailModel>();
     

@@ -11,16 +11,24 @@ import UIKit
 import CommonCrypto
 
 extension UIImageView {
-    public func twm_setImageWithURLString(url: String,placeholderImage:UIImage) {
+    func twm_setImageWithURLString(url: String,placeholderImage:UIImage) {
         self.image = placeholderImage;
         TWMImageDownloader.shared.downloadImage(url: url) { (image) in
             self.image = image;
         };
     }
+    
+    func twm_setImageWithURLString(url: String,placeholderImage:UIImage,completion:@escaping (_ image:UIImage)->Void) {
+        self.image = placeholderImage;
+        TWMImageDownloader.shared.downloadImage(url: url) { (image) in
+            self.image = image;
+            completion(image);
+        };
+    }
 }
 
 extension String {
-    public func cacheDir() -> String {
+    func cacheDir() -> String {
         var dir = NSHomeDirectory() + "/caches" ;
         let  fileManager = FileManager.default
         let result = fileManager.fileExists(atPath: dir)
@@ -35,7 +43,7 @@ extension String {
         return dir;
     }
     
-    public func sha512Hex() -> String {
+    func sha512Hex() -> String {
         var digest = [UInt8](repeating: 0, count: Int(CC_SHA512_DIGEST_LENGTH))
         if let data = self.data(using: String.Encoding.utf8) {
             CC_SHA512([UInt8](data), CC_LONG(data.count), &digest)
