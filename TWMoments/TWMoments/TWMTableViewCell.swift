@@ -60,8 +60,8 @@ class TWMTableViewCell: UITableViewCell {
             make.left.equalTo(nickLabel.snp.left);
             make.top.equalTo(photosView.snp.bottom).offset(10);
             make.right.equalToSuperview().offset(-20);
-            make.bottom.equalToSuperview().offset(-5);
-        }
+//            make.bottom.equalToSuperview().offset(-5);
+        };
         
     }
     
