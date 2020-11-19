@@ -17,14 +17,6 @@ extension UIImageView {
             self.image = image;
         };
     }
-    
-    func twm_setImageWithURLString(url: String,placeholderImage:UIImage,completion:@escaping (_ image:UIImage)->Void) {
-        self.image = placeholderImage;
-        TWMImageDownloader.shared.downloadImage(url: url) { (image) in
-            self.image = image;
-            completion(image);
-        };
-    }
 }
 
 extension String {

@@ -38,20 +38,23 @@ class TWMCommentContainerView: UIView {
             label.attributedText = attributedString;
             self.addSubview(label);
             commentLabels.append(label);
+            let isLastOne = i == comments.count - 1;
             if i == 0 {
                 label.snp.makeConstraints { (make) in
                     make.left.equalToSuperview().offset(5);
                     make.top.equalToSuperview().offset(5);
                     make.right.equalToSuperview().offset(5);
+                    if isLastOne {
+                        make.bottom.equalToSuperview().offset(-5);
+                    }
                 }
             } else {
-                let isLastOne = i == comments.count - 1;
                 label.snp.makeConstraints { (make) in
                     make.left.equalTo(commentLabels[i-1].snp.left);
-                    make.top.equalTo(commentLabels[i-1].snp.bottom).offset(-5);
+                    make.top.equalTo(commentLabels[i-1].snp.bottom).offset(5);
                     make.right.equalTo(commentLabels[i-1].snp.right);
                     if isLastOne {
-                        make.bottom.equalToSuperview().offset(0);
+                        make.bottom.equalToSuperview().offset(-5);
                     }
                 }
             }

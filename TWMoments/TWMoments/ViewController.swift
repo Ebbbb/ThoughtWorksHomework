@@ -9,15 +9,17 @@
 import UIKit
 import SnapKit
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, TWMRefreshAndLoadViewDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     
     var userInfo = TWMUserInfoModel();
-    var tweetList = Array<TWMTweetDetailModel>();
+    var tweetList = Array<TWMTweetDetailModel>(); //所有列表数据
+    var tweetArr = Array<TWMTweetDetailModel>(); //模拟分页数据
+    
     var tableHeader = TWMTableViewHeader.init(frame: CGRect.init(x: 0, y: 0, width: 0, height: 260));
     var tableCell = TWMTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: "cell");
-    
+    var refreshView:TWMRefreshAndLoadView!;
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,7 +28,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         tableView.tableHeaderView = tableHeader;
         tableView.tableFooterView = UIView();
         tableView.register(TWMTableViewCell.self, forCellReuseIdentifier: "cell");
-        tableView.estimatedRowHeight = 50;
+        tableView.estimatedRowHeight = 0;
+        refreshView = TWMRefreshAndLoadView.init(frame: CGRect.zero, inTableView: tableView)
+        refreshView.delegate = self;
         self.requetData();
         
         NotificationCenter.default.addObserver(self, selector: #selector(reloadTableIndexPath), name: NSNotification.Name(rawValue: "reloadTableIndexPath"), object: nil);
@@ -39,7 +43,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     @objc func reloadTableIndexPath(notification: Notification) {
         let indexPath = notification.object as! IndexPath;
-        self.tableView.reloadRows(at: [indexPath], with: UITableView.RowAnimation.fade);
+        self.tableView.reloadRows(at: [indexPath], with: UITableView.RowAnimation.none);
     }
     
     func requetData() {
@@ -60,10 +64,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 let tweetDetailModel = TWMTweetDetailModel.init(tweetDetail: tweetDetailDict);
                 if (tweetDetailModel.content.count > 0 || tweetDetailModel.images.count > 0) {
                     self.tweetList.append(tweetDetailModel);
-                    OperationQueue.main.addOperation {
-                        self.tableView.reloadData();
-                    }
                 }
+            }
+            if self.tweetList.count > 5 {
+                self.tweetArr.append(contentsOf: self.tweetList.prefix(upTo: 5));
+            } else {
+                self.tweetArr.append(contentsOf: self.tweetList);
+            }
+            OperationQueue.main.addOperation {
+                self.tableView.reloadData();
             }
         }
     }
@@ -90,23 +99,62 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         task.resume()
         
     }
+    
+    //Mark: TWMRefreshAndLoadViewDelegate
+    func refreshViewDidRefresh(_ refreshView: TWMRefreshAndLoadView) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.tweetArr.removeAll();
+            if self.tweetList.count > 5 {
+                self.tweetArr.append(contentsOf: self.tweetList.prefix(upTo: 5));
+            } else {
+                self.tweetArr.append(contentsOf: self.tweetList);
+            }
+            self.tableView.reloadData();
+            self.refreshView.endRefreshing()
+        };
+    }
 
+    func refreshViewDidLoad(_ loadView: TWMRefreshAndLoadView) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            if self.tweetList.count > self.tweetArr.count {
+                var indexPathArray = Array<IndexPath>();
+                for i in self.tweetArr.count..<self.tweetArr.count + 5 {
+                    if i > self.tweetList.count {
+                        break;
+                    }
+                    self.tweetArr.append(self.tweetList[i]);
+                    indexPathArray.append(IndexPath.init(row: i, section: 0));
+                }
+    
+                self.tableView.insertRows(at: indexPathArray, with: UITableView.RowAnimation.none);
+            }
+            self.refreshView.endLoading()
+        };
+    }
     //Mark: tableview delegate and datasource
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return tweetList.count;
+        return tweetArr.count;
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! TWMTableViewCell;
-        cell.setUIWithModel(model: self.tweetList[indexPath.row]);
+        cell.setUIWithModel(model: tweetArr[indexPath.row]);
         cell.photosView.indexPath = indexPath;
         return cell;
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        self.tableCell.setDataWithModel(model: tweetList[indexPath.row]);
+        self.tableCell.setDataWithModel(model: tweetArr[indexPath.row]);
         return self.tableCell.heightForCell();
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        self.refreshView.scrollViewDidScroll(scrollView);
+    }
+    
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        self.refreshView.scrollViewWillEndDragging(scrollView, withVelocity: velocity, targetContentOffset: targetContentOffset);
     }
 }
 

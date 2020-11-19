@@ -19,7 +19,7 @@ class TWMTableViewHeader: UIView {
         self.addSubview(profileImageView);
         profileImageView.snp.makeConstraints { (make) in
             make.left.equalToSuperview().offset(0);
-            make.top.equalToSuperview().offset(-100);
+            make.top.equalToSuperview().offset(-50);
             make.right.equalToSuperview().offset(0);
             make.bottom.equalToSuperview().offset(-40);
         };

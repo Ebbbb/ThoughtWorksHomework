@@ -25,6 +25,8 @@
 		2C70AD162563E45000965B64 /* TWMTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C70AD152563E45000965B64 /* TWMTableViewCell.swift */; };
 		2C70AD182563E87E00965B64 /* TWMPhotoContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C70AD172563E87E00965B64 /* TWMPhotoContainerView.swift */; };
 		2C70AD1A2565117E00965B64 /* TWMCommentContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C70AD192565117E00965B64 /* TWMCommentContainerView.swift */; };
+		2C71337925660D2100A005FD /* TWMRefreshAndLoadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C71337825660D2100A005FD /* TWMRefreshAndLoadView.swift */; };
+		2C71337B25661A2C00A005FD /* loading.gif in Resources */ = {isa = PBXBuildFile; fileRef = 2C71337A25661A2C00A005FD /* loading.gif */; };
 		46B728387808F29B352969DF /* Pods_TWMoments_TWMomentsUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6AEED98111194D6F88FB807 /* Pods_TWMoments_TWMomentsUITests.framework */; };
 		9D35777BC31F5AD9A59EA0DB /* Pods_TWMomentsTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ACCBF9FED96951018D063397 /* Pods_TWMomentsTests.framework */; };
 /* End PBXBuildFile section */
@@ -72,6 +74,8 @@
 		2C70AD152563E45000965B64 /* TWMTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TWMTableViewCell.swift; sourceTree = "<group>"; };
 		2C70AD172563E87E00965B64 /* TWMPhotoContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TWMPhotoContainerView.swift; sourceTree = "<group>"; };
 		2C70AD192565117E00965B64 /* TWMCommentContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TWMCommentContainerView.swift; sourceTree = "<group>"; };
+		2C71337825660D2100A005FD /* TWMRefreshAndLoadView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TWMRefreshAndLoadView.swift; sourceTree = "<group>"; };
+		2C71337A25661A2C00A005FD /* loading.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = loading.gif; sourceTree = "<group>"; };
 		3BD1D57A62A2B40CA38CB53E /* Pods-TWMomentsTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TWMomentsTests.release.xcconfig"; path = "Target Support Files/Pods-TWMomentsTests/Pods-TWMomentsTests.release.xcconfig"; sourceTree = "<group>"; };
 		3FE4FFB4C16850E08F44A930 /* Pods-TWMoments-TWMomentsUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TWMoments-TWMomentsUITests.debug.xcconfig"; path = "Target Support Files/Pods-TWMoments-TWMomentsUITests/Pods-TWMoments-TWMomentsUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		86D431E2A4C2AFBE03FC3BE1 /* Pods-TWMoments.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TWMoments.debug.xcconfig"; path = "Target Support Files/Pods-TWMoments/Pods-TWMoments.debug.xcconfig"; sourceTree = "<group>"; };
@@ -136,6 +140,7 @@
 			isa = PBXGroup;
 			children = (
 				2C70AD112563A4B500965B64 /* place_holder.png */,
+				2C71337A25661A2C00A005FD /* loading.gif */,
 				2C70ACD925635C5600965B64 /* AppDelegate.swift */,
 				2C70ACDB25635C5600965B64 /* SceneDelegate.swift */,
 				2C70ACDD25635C5600965B64 /* ViewController.swift */,
@@ -146,6 +151,7 @@
 				2C70AD152563E45000965B64 /* TWMTableViewCell.swift */,
 				2C70AD172563E87E00965B64 /* TWMPhotoContainerView.swift */,
 				2C70AD192565117E00965B64 /* TWMCommentContainerView.swift */,
+				2C71337825660D2100A005FD /* TWMRefreshAndLoadView.swift */,
 				2C70ACDF25635C5600965B64 /* Main.storyboard */,
 				2C70ACE225635C5900965B64 /* Assets.xcassets */,
 				2C70ACE425635C5900965B64 /* LaunchScreen.storyboard */,
@@ -307,6 +313,7 @@
 			files = (
 				2C70ACE625635C5900965B64 /* LaunchScreen.storyboard in Resources */,
 				2C70AD122563A4B500965B64 /* place_holder.png in Resources */,
+				2C71337B25661A2C00A005FD /* loading.gif in Resources */,
 				2C70ACE325635C5900965B64 /* Assets.xcassets in Resources */,
 				2C70ACE125635C5600965B64 /* Main.storyboard in Resources */,
 			);
@@ -446,6 +453,7 @@
 				2C70AD142563AC5D00965B64 /* TWMModelClass.swift in Sources */,
 				2C70AD0C256367D800965B64 /* TWMExtension.swift in Sources */,
 				2C70AD0A256362E100965B64 /* TWMTableViewHeader.swift in Sources */,
+				2C71337925660D2100A005FD /* TWMRefreshAndLoadView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
